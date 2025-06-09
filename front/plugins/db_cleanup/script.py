@@ -167,23 +167,6 @@ def cleanup_database (dbPath, DAYS_TO_KEEP_EVENTS, HRS_TO_KEEP_NEWDEV, HRS_TO_KE
         mylog('verbose', [f'[{pluginName}] Query: {query} '])            
         cursor.execute(query)
 
-
-    # -----------------------------------------------------
-    # De-dupe (de-duplicate) from the Plugins_Objects table 
-    # TODO This shouldn't be necessary - probably a concurrency bug somewhere in the code :(        
-    mylog('verbose', [f'[{pluginName}] Plugins_Objects: Delete all duplicates'])
-    cursor.execute("""
-        DELETE FROM Plugins_Objects
-        WHERE rowid > (
-            SELECT MIN(rowid) FROM Plugins_Objects p2
-            WHERE Plugins_Objects.Plugin = p2.Plugin
-            AND Plugins_Objects.Object_PrimaryID = p2.Object_PrimaryID
-            AND Plugins_Objects.Object_SecondaryID = p2.Object_SecondaryID
-            AND Plugins_Objects.UserData = p2.UserData
-        )
-    """)
-
-
     conn.commit()
 
     # Check WAL file size
