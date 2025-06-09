@@ -202,9 +202,13 @@ class DB():
                                     "HelpVal3" TEXT,
                                     "HelpVal4" TEXT,
                                     ObjectGUID TEXT,
+                                    UNIQUE(Plugin, Object_PrimaryID, Object_SecondaryID, UserData),
                                     PRIMARY KEY("Index" AUTOINCREMENT)
                         ); """
         self.sql.execute(sql_Plugins_Objects)
+        self.sql.execute(
+            "CREATE UNIQUE INDEX IF NOT EXISTS idx_PluginsObjects_unique ON Plugins_Objects (Plugin, Object_PrimaryID, Object_SecondaryID, UserData);"
+        )
 
         # Plugin execution results
         sql_Plugins_Events = """ CREATE TABLE IF NOT EXISTS Plugins_Events(

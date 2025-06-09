@@ -589,11 +589,10 @@ def process_plugin_events(db, plugin, plugEventsArr):
 
 
     try:
-        # Begin a transaction
-        with conn:
+        conn.execute("BEGIN IMMEDIATE")
 
-            pluginObjects = []
-            pluginEvents  = []
+        pluginObjects = []
+        pluginEvents  = []
 
             #  Create plugin objects from existing database entries
             plugObjectsArr = db.get_sql_array ("SELECT * FROM Plugins_Objects where Plugin = '" + str(pluginPref)+"'") 
